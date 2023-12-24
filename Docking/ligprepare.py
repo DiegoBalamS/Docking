@@ -40,7 +40,6 @@ from .tools import (
 
 
 def prep(
-        self,
         smiles: str,
         pH=7.4,
         num_cpus: Optional[int] = None,
@@ -58,11 +57,11 @@ def prep(
         :return: docking score and dictionary containing all poses and binding free energies
         """
         # Auxiliary files
-        ligand_mol_file = self.working_dir / 'ligand.mol'
-        ligand_pdbqt = self.working_dir / 'ligand.pdbqt'
-        vina_logfile = self.working_dir / 'vina.log'
-        vina_outfile = self.working_dir / 'vina.out'
-        docked_ligand_pdb = self.working_dir / 'docked_ligand.pdb'
+        ligand_mol_file = 'ligand.mol'
+        ligand_pdbqt = 'ligand.pdbqt'
+        vina_logfile = 'vina.log'
+        vina_outfile = 'vina.out'
+        docked_ligand_pdb ='docked_ligand.pdb'
 
         # Make sure user input is standardized
         canonical_smiles = canonicalize_smiles(smiles)
