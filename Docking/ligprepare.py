@@ -39,7 +39,7 @@ from .tools import (
 
 
 
-def dock(
+def prep(
         self,
         smiles: str,
         pH=7.4,
