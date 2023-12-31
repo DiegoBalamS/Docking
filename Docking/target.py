@@ -125,6 +125,33 @@ class Target:
 
         return Path(self._tmp_dir_handle.name).resolve()
 
+    def prept(pdbqt_file: PathType
+        pH=7.4,
+        num_cpus: Optional[int] = None,
+        seed=974528263,
+        verbose=False,
+    ) -> Tuple[Optional[float], Dict[str, Any]]:
+        """
+        Given a molecule, this method will return a docking score against the current target.
+
+        :param smiles: SMILES string of ligand
+        :param pH: pH at which the docking should take place (default: 7.4, don't change unless you know what you are doing)
+        :param num_cpus: number of CPUs cores available to AutoDock Vina
+        :param seed: random seed for conformation generation and docking
+        :param verbose: increase verbosity of log messages
+        :return: docking score and dictionary containing all poses and binding free energies
+        """
+        # Auxiliary files
+        ligand_mol_file = 'ligand.mol'
+        ligand_pdbqt = 'ligand.pdbqt'
+        vina_logfile = 'vina.log'
+        vina_outfile = 'vina.out'
+        docked_ligand_pdb ='docked_ligand.pdb'
+
+    
+        return ligand_pdbqt
+
+
     def _dock_pdbqt(self, pdbqt_path, log_path, out_path, seed, num_cpus: Optional[int] = None) -> None:
         """
         Run AutoDock Vina.
