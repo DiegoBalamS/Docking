@@ -310,6 +310,35 @@ def convert_pdbqt_to_pdb(pdbqt_file: PathType, pdb_file: PathType, disable_bondi
     if cmd_return.returncode != 0:
         raise FormatConversionError('Conversion from PDBQT to PDB failed')
 
+def convert_pdb_to_pdbqt(pdb_file: PathType, pdbqt_file: PathType, disable_bonding=False) -> None:
+    """
+    Convert a PDBQT file to a PDB file with Open Babel.
+
+    :param pdbqt_file: path to the PDBQT input file
+    :param pdb_file: path to the PDB output file
+    :param disable_bonding: disable automatic bonding with Open Babel
+    """
+    # yapf: disable
+    cmd_args = [
+        'obabel',
+        '-ipdb', pdbqt_file,
+        '-opdbqt',
+        '-O', pdbqt_file,
+    ]
+    # yapf: enable
+
+    if disable_bonding:
+        # "a" = read option
+        # "b" = disable automatic bonding
+        cmd_args += ['-ab']
+
+    cmd_return = subprocess.run(cmd_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    stdout = cmd_return.stdout.decode('utf-8')
+    logging.debug(stdout)
+
+    if cmd_return.returncode != 0:
+        raise FormatConversionError('Conversion from PDB to PDBQT failed')
+
 
 def protonate_mol(mol: Chem.Mol, pH: float) -> Chem.Mol:
     """
