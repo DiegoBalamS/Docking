@@ -11,8 +11,8 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 from rdkit.Chem import AllChem as Chem
 
-from .errors import DockingError, DockstringError, VinaError
-from .tools import (
+from errors import DockingError, DockstringError, VinaError
+from tools import (
     PathType,
     assign_bond_orders,
     assign_stereochemistry,
@@ -128,6 +128,23 @@ def prepare_ligand(input_file, output_file):
 #prepare_ligand(input_ligand_file, output_ligand_file)
 
 #print("Preparación del ligando completada.")
+
+def prepare_ligand_adt(input_ligand, output_ligand_pdbqt):
+    # Ruta al script prepare_ligand4.py de AutoDockTools
+    prepare_ligand_script = '/ruta/a/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_ligand4.py'
+
+    # Comando para preparar el ligando
+    command = f'pythonsh {prepare_ligand_script} -l {input_ligand} -o {output_ligand_pdbqt} -A hydrogens'
+
+    # Ejecutar el comando
+    call(command, shell=True)
+
+# Ruta al archivo del ligando en formato PDB
+#input_ligand_file = 'ruta/al/archivo/ligando.pdb'
+
+# Ruta al archivo de salida en formato PDBQT
+#output_ligand_pdbqt_file = 'ruta/al/archivo/ligando.pdbqt'
+
     
     
 
