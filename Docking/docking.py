@@ -14,7 +14,7 @@ size_x, size_y, size_z = 20, 20, 20          # Tamaño de la cuadrícula
 
 # Comando para ejecutar AutoDock Vina
 vina_command = [
-    'vina', 
+    '/Users/diegobalam/Documents/Docking-main-2/Docking/resources/bin/vina_mac_catalina', 
     '--receptor', protein_file,
     '--ligand', ligand_file,
     '--center_x', str(center_x),
