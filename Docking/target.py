@@ -2,7 +2,7 @@ import logging
 import os
 import pathlib
 import re
-import subprocess
+from subprocess import call
 import tempfile
 from collections.abc import Iterable
 from pathlib import Path
@@ -65,6 +65,76 @@ def list_all_target_names(targets_dir: Optional[PathType] = None) -> List[str]:
             names.append(match.group('name'))
 
     return names
+
+
+# Función para preparar el receptor
+def prepare_receptor_adt(input_pdb, output_pdbqt):
+    # Comando para agregar hidrógenos polares y hacer merge de los no polares
+    add_hydrogens_command = f'pythonsh /ruta/a/adt/bin/pythonsh /ruta/a/adt/AutoDockTools/Utilities24/prepare_receptor4.py -r {input_pdb} -o temp.pdb -A hydrogens -U nphs'
+
+    # Ejecutar el comando para agregar hidrógenos
+    call(add_hydrogens_command, shell=True)
+
+    # Comando para agregar cargas de Kollman y convertir a PDBQT
+    add_charges_command = f'pythonsh /ruta/a/adt/bin/pythonsh /ruta/a/adt/AutoDockTools/Utilities24/prepare_receptor4.py -r temp.pdb -o {output_pdbqt} -A checkhydrogens'
+
+    # Ejecutar el comando para agregar cargas y convertir a PDBQT
+    call(add_charges_command, shell=True)
+
+    # Eliminar el archivo temporal
+    os.remove('temp.pdb')
+
+# Ruta al archivo PDB del receptor
+input_pdb_file = 'ruta/al/archivo/receptor.pdb'
+
+# Ruta al archivo PDBQT de salida
+output_pdbqt_file = 'ruta/al/archivo/salida_receptor.pdbqt'
+
+# Llamar a la función para preparar el receptor
+prepare_receptor(input_pdb_file, output_pdbqt_file)
+
+print("Preparación del receptor completada.")
+
+import openbabel
+
+def prepare_receptor_babel(input_pdb, output_pdbqt):
+    # Crear un objeto de conversión
+    conversion = openbabel.OBConversion()
+
+    # Especificar los formatos de entrada y salida
+    conversion.SetInAndOutFormats("pdb", "pdbqt")
+
+    # Crear un objeto molécula
+    mol = openbabel.OBMol()
+
+    # Leer el archivo de entrada
+    conversion.ReadFile(mol, input_pdb)
+
+    # Agregar hidrógenos polares
+    mol.AddHydrogens(True, False)
+
+    # Crear un objeto que manejará la adición de cargas
+    charge_model = openbabel.OBChargeModel.FindType("gasteiger")
+
+    # Calcular y asignar las cargas
+    if charge_model:
+        charge_model.ComputeCharges(mol)
+
+    # Escribir el archivo de salida
+    conversion.WriteFile(mol, output_pdbqt)
+
+    # Cerrar el archivo de salida
+    conversion.CloseOutFile()
+
+# Rutas a los archivos de entrada y salida
+input_pdb_file = 'ruta/al/archivo/receptor.pdb'
+output_pdbqt_file = 'ruta/al/archivo/salida_receptor.pdbqt'
+
+# Preparar el receptor
+prepare_receptor(input_pdb_file, output_pdbqt_file)
+
+print("Preparación del receptor completada.")
+
 
 
 class Target:
