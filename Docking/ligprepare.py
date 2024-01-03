@@ -145,6 +145,24 @@ def prepare_ligand_adt(input_ligand, output_ligand_pdbqt):
 # Ruta al archivo de salida en formato PDBQT
 #output_ligand_pdbqt_file = 'ruta/al/archivo/ligando.pdbqt'
 
+def prepare_ligand(input_ligand, output_ligand_pdbqt):
+    """
+    Prepara un ligando para el docking realizando las siguientes operaciones:
+    - Agrega hidrógenos.
+    - Realiza merge de los hidrógenos no polares.
+    - Agrega cargas de Gasteiger.
+    - Convierte el archivo a formato PDBQT.
+    
+    Args:
+    input_ligand (str): Ruta al archivo del ligando en formato PDB.
+    output_ligand_pdbqt (str): Ruta al archivo de salida en formato PDBQT.
+    """
+    # Comando para preparar el ligando con obabel
+    command = f'obabel {input_ligand} -opdbqt -O {output_ligand_pdbqt} -h -p --partialcharge gasteiger'
+
+    # Ejecutar el comando
+    call(command, shell=True)
+
     
     
 
