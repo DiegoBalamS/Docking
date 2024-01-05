@@ -4,7 +4,7 @@ import pathlib
 import re
 import subprocess
 import tempfile
-import openbabel
+#import openbabel
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -91,34 +91,34 @@ def prep(
 
         return ligand_pdbqt
 
-def prepare_ligand(input_file, output_file):
+#def prepare_ligand(input_file, output_file):
     # Crear un objeto de conversión
-    conversion = openbabel.OBConversion()
+    #conversion = openbabel.OBConversion()
 
     # Especificar los formatos de entrada y salida
-    conversion.SetInAndOutFormats("pdb", "pdbqt")
+    #conversion.SetInAndOutFormats("pdb", "pdbqt")
 
     # Crear un objeto molécula
-    mol = openbabel.OBMol()
+    #mol = openbabel.OBMol()
 
     # Leer el archivo de entrada
-    conversion.ReadFile(mol, input_file)
+    #conversion.ReadFile(mol, input_file)
 
     # Agregar hidrógenos (tanto polares como no polares)
-    mol.AddHydrogens()
+    #mol.AddHydrogens()
 
     # Crear un objeto que manejará la adición de cargas de Gasteiger
-    charge_model = openbabel.OBChargeModel.FindType("gasteiger")
+    #charge_model = openbabel.OBChargeModel.FindType("gasteiger")
 
     # Calcular y asignar las cargas
-    if charge_model:
-        charge_model.ComputeCharges(mol)
+    #if charge_model:
+    #    charge_model.ComputeCharges(mol)
 
     # Escribir el archivo de salida
-    conversion.WriteFile(mol, output_file)
+    #conversion.WriteFile(mol, output_file)
 
     # Cerrar el archivo de salida
-    conversion.CloseOutFile()
+    #conversion.CloseOutFile()
 
 # Rutas a los archivos de entrada y salida
 #input_ligand_file = 'ruta/al/archivo/ligando.pdb'
