@@ -1,5 +1,4 @@
 import copy
-import logging
 import os
 import platform
 import re
@@ -32,40 +31,6 @@ from errors import (
 
 PathType = Union[str, os.PathLike]
 
-
-def setup_logger(level: Union[int, str] = logging.INFO, path: Optional[str] = None) -> logging.Logger:
-    """
-    Setup "dockstring" logger.
-
-    :param level: log level (int or string)
-    :param path: path to which log messages are written
-    :return: dockstring logger
-    """
-    logger = logging.getLogger("dockstring")
-    logger.setLevel(level)
-
-    formatter = logging.Formatter('%(asctime)s.%(msecs)03d %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-
-    ch = logging.StreamHandler(stream=sys.stdout)
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
-
-    if path is not None:
-        fh = logging.FileHandler(path)
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
-
-    return logger
-
-
-def is_file_empty(path) -> bool:
-    """
-    Check if file is empty
-
-    :param path: path to be checked
-    :return: True if path is empty, otherwise False
-    """
-    return os.stat(path).st_size == 0
 
 
 def get_vina_filename() -> str:
@@ -265,22 +230,7 @@ def refine_mol_with_ff(mol, max_iters=1000) -> Chem.Mol:
     return opt_mol
 
 
-def check_obabel_install() -> None:
-    """Check that openbabel is installed correctly and has the correct version"""
-    cmd_args = ['obabel', '-V']
-    cmd_return = subprocess.run(cmd_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    stdout = cmd_return.stdout.decode('utf-8').strip()
-
-    if cmd_return.returncode != 0:
-        raise DockingError(f"The test command `{' '.join(cmd_args)}` failed!")
-
-    # Example: Open Babel 3.1.0 -- Oct 12 2020 -- 14:17:21
-    expected_version = 'Open Babel 3.1'
-    if not stdout.startswith(expected_version):
-        raise DockingError("The obabel test command succeeded but the version doesn't seem to match. " +
-                           expected_version + ' required.')
-
-
+# checar esta parte 
 def convert_pdbqt_to_pdb(pdbqt_file: PathType, pdb_file: PathType, disable_bonding=False) -> None:
     """
     Convert a PDBQT file to a PDB file with Open Babel.
