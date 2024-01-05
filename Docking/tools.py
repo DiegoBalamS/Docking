@@ -14,21 +14,6 @@ from rdkit.Chem import AllChem as Chem
 from rdkit.Chem.Descriptors import NumRadicalElectrons
 from rdkit.Chem.MolStandardize.rdMolStandardize import Uncharger
 
-from errors import (
-    CanonicalizationError,
-    DockingError,
-    DockstringError,
-    DockstringWarning,
-    EmbeddingError,
-    FormatConversionError,
-    OutputError,
-    ParsingError,
-    PoseProcessingError,
-    ProtonationError,
-    SanityError,
-    StructureOptimizationError,
-)
-
 PathType = Union[str, os.PathLike]
 
 
