@@ -4,14 +4,16 @@ import pathlib
 import re
 import subprocess
 import tempfile
-#import openbabel
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
+from subprocess import call
+ 
 
 from rdkit.Chem import AllChem as Chem
 
-from errors import DockingError, DockstringError, VinaError
+
+
 from tools import (
     PathType,
     assign_bond_orders,
@@ -48,7 +50,7 @@ def prep(
         verbose=False,
     ) -> Tuple[Optional[float], Dict[str, Any]]:
         """
-        Given a molecule, this method will return a docking score against the current target.
+        Given a molecule, this method will prepare the ligand for the docking against the target.
 
         :param smiles: SMILES string of ligand
         :param pH: pH at which the docking should take place (default: 7.4, don't change unless you know what you are doing)
@@ -60,9 +62,6 @@ def prep(
         # Auxiliary files
         ligand_mol_file = 'ligand.mol'
         ligand_pdbqt = 'ligand.pdbqt'
-        vina_logfile = 'vina.log'
-        vina_outfile = 'vina.out'
-        docked_ligand_pdb ='docked_ligand.pdb'
 
         # Make sure user input is standardized
         canonical_smiles = canonicalize_smiles(smiles)
@@ -91,45 +90,8 @@ def prep(
 
         return ligand_pdbqt
 
-#def prepare_ligand(input_file, output_file):
-    # Crear un objeto de conversión
-    #conversion = openbabel.OBConversion()
 
-    # Especificar los formatos de entrada y salida
-    #conversion.SetInAndOutFormats("pdb", "pdbqt")
-
-    # Crear un objeto molécula
-    #mol = openbabel.OBMol()
-
-    # Leer el archivo de entrada
-    #conversion.ReadFile(mol, input_file)
-
-    # Agregar hidrógenos (tanto polares como no polares)
-    #mol.AddHydrogens()
-
-    # Crear un objeto que manejará la adición de cargas de Gasteiger
-    #charge_model = openbabel.OBChargeModel.FindType("gasteiger")
-
-    # Calcular y asignar las cargas
-    #if charge_model:
-    #    charge_model.ComputeCharges(mol)
-
-    # Escribir el archivo de salida
-    #conversion.WriteFile(mol, output_file)
-
-    # Cerrar el archivo de salida
-    #conversion.CloseOutFile()
-
-# Rutas a los archivos de entrada y salida
-#input_ligand_file = 'ruta/al/archivo/ligando.pdb'
-#output_ligand_file = 'ruta/al/archivo/salida_ligando.pdbqt'
-
-# Preparar el ligando
-#prepare_ligand(input_ligand_file, output_ligand_file)
-
-#print("Preparación del ligando completada.")
-
-def prepare_ligand_adt(input_ligand, output_ligand_pdbqt):
+def pre_ligand_adt(input_ligand, output_ligand_pdbqt):
     # Ruta al script prepare_ligand4.py de AutoDockTools
     prepare_ligand_script = '/ruta/a/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_ligand4.py'
 
@@ -145,7 +107,7 @@ def prepare_ligand_adt(input_ligand, output_ligand_pdbqt):
 # Ruta al archivo de salida en formato PDBQT
 #output_ligand_pdbqt_file = 'ruta/al/archivo/ligando.pdbqt'
 
-def prepare_ligand(input_ligand, output_ligand_pdbqt):
+def prepare_ligand(smiles, output_ligand_pdbqt):
     """
     Prepara un ligando para el docking realizando las siguientes operaciones:
     - Agrega hidrógenos.
@@ -157,13 +119,32 @@ def prepare_ligand(input_ligand, output_ligand_pdbqt):
     input_ligand (str): Ruta al archivo del ligando en formato PDB.
     output_ligand_pdbqt (str): Ruta al archivo de salida en formato PDBQT.
     """
+
+# Auxiliary files
+    ligand_mol_file = 'ligand.mol'
+    ligand_pdbqt = 'ligand.pdbqt'
+    vina_logfile = 'vina.log'
+    vina_outfile = 'vina.out'
+    docked_ligand_pdb ='docked_ligand.pdb'
+
+
+    mol=Chem.MolFromSmiles(smiles)
+    mol = Chem.AddHs(mol)
+    Chem.MolToMolFile(mol, ligand_mol_file)
+    cmd_list = [
+        'obabel',
+        '-imol', ligand_mol_file,
+        '-opdbqt',
+        '-O', output_ligand_pdbqt,
+        '-h','-p',
+        '--partialcharge', 'gasteiger'
+    ]
+    # yapf: enable
+    cmd_return = subprocess.run(cmd_list, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    output = cmd_return.stdout.decode('utf-8')
+    logging.debug(output)
     # Comando para preparar el ligando con obabel
-    command = f'obabel {input_ligand} -opdbqt -O {output_ligand_pdbqt} -h -p --partialcharge gasteiger'
+    #command = f'obabel -ipdb {pdb_block} -opdbqt -O {output_ligand_pdbqt} -h -p --partialcharge gasteiger'
 
     # Ejecutar el comando
-    call(command, shell=True)
-
-    
-    
-
-    
+    #call(command, shell=True)
