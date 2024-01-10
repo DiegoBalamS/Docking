@@ -2,7 +2,7 @@ import os
 import numpy as np
 from Bio.PDB import PDBParser
 
-def calculate_grid_center_and_size(pdb_file):
+def calculate_grid(pdb_file):
     parser = PDBParser()
     structure = parser.get_structure('protein', pdb_file)
 
@@ -17,9 +17,10 @@ def calculate_grid_center_and_size(pdb_file):
     return center, size
 
 # Ruta al archivo PDB de la proteína
-pdb_file = 'ruta/a/tu/archivo/proteina.pdb'
+#pdb_file = 'ruta/a/tu/archivo/proteina.pdb'
 
-center, size = calculate_grid_center_and_size(pdb_file)
+#center, size = calculate_grid_center_and_size(pdb_file)
 
-print("Centro de la cuadrícula:", center)
-print("Tamaño de la cuadrícula:", size)
+#print("Centro de la cuadrícula:", center)
+#print("Tamaño de la cuadrícula:", size)
+
