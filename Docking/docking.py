@@ -31,21 +31,3 @@ call(vina_command)
 
 print("Docking completado.")
 
-# Comando para ejecutar AutoDock Vina
-vina_command = [
-    'vina', 
-    '--receptor', protein_file,
-    '--ligand', ligand_file,
-    '--center_x', str(center_x),
-    '--center_y', str(center_y),
-    '--center_z', str(center_z),
-    '--size_x', str(size_x),
-    '--size_y', str(size_y),
-    '--size_z', str(size_z),
-    '--out', output_file
-]
-
-# Ejecutar el comando
-call(vina_command)
-
-print("Docking completado.")
